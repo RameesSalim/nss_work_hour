@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Signin Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/signin.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="js/ie-emulation-modes-warning.js"></script>
+    <!-- Firebase App is always required and must be first -->
+<script src="https://www.gstatic.com/firebasejs/5.4.1/firebase-app.js"></script>
+
+<!-- Add additional services that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/5.4.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.4.1/firebase-database.js"></script>
+
+  </head>
+
+  <body>
+
+    <div class="container">
+
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" id="email" class="form-control" placeholder="Email address" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="password" class="form-control" placeholder="Password" required>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" id="sign-in" onclick="toggleSignIn();">Sign in</button>
+                <button class="btn btn-lg btn-primary btn-block" type="submit" id="sign-up" onclick="handleSignUp(); ">Sign up</button>
+
+    </div> <!-- /container -->
+
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+
+    
+
+<script>
+  var config = {
+    apiKey: "AIzaSyCSFQpl6OzKEU36RpAJ0FQWsVKVGu8x5JI",
+    authDomain: "nss-attendance.firebaseapp.com",
+    databaseURL: "https://nss-attendance.firebaseio.com",
+    projectId: "nss-attendance",
+    storageBucket: "nss-attendance.appspot.com",
+    messagingSenderId: "1089549780858"
+  };
+  firebase.initializeApp(config);
+</script>
+
+<script type="text/javascript">
+
+    function initApp() {
+      // Listening for auth state changes.
+      // [START authstatelistener]
+      firebase.auth().onAuthStateChanged(function(user) {
+        // [START_EXCLUDE silent]
+        // document.getElementById('quickstart-verify-email').disabled = true;
+        // [END_EXCLUDE]
+        if (user) {
+          // User is signed in.
+          var displayName = user.displayName;
+          var email = user.email;
+          var emailVerified = user.emailVerified;
+          var photoURL = user.photoURL;
+          var isAnonymous = user.isAnonymous;
+          var uid = user.uid;
+          var providerData = user.providerData;
+          // [START_EXCLUDE]
+          document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
+          document.getElementById('quickstart-sign-in').textContent = 'Sign out';
+          document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
+          if (!emailVerified) {
+            // document.getElementById('quickstart-verify-email').disabled = false;
+          }
+          // [END_EXCLUDE]
+        } else {
+
+          window.location.href = "login.html";
+          // User is signed out.
+          // [START_EXCLUDE]
+          // document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
+          // document.getElementById('quickstart-sign-in').textContent = 'Sign in';
+          // document.getElementById('quickstart-account-details').textContent = 'null';
+          // [END_EXCLUDE]
+        }
+        // [START_EXCLUDE silent]
+        // document.getElementById('quickstart-sign-in').disabled = false;
+        // [END_EXCLUDE]
+      });
+
+      }
+
+    function sendEmailVerification() {
+      // [START sendemailverification]
+      firebase.auth().currentUser.sendEmailVerification().then(function() {
+        // Email Verification sent!
+        // [START_EXCLUDE]
+        alert('Email Verification Sent!');
+        // [END_EXCLUDE]
+      });
+      // [END sendemailverification]
+    }
+
+
+
+        window.onload = function() {
+      initApp();
+    };
+</script>
+  </body>
+</html>
