@@ -1,4 +1,4 @@
-  // Initialize Firebase
+
   var config = {
     apiKey: "AIzaSyCSFQpl6OzKEU36RpAJ0FQWsVKVGu8x5JI",
     authDomain: "nss-attendance.firebaseapp.com",
