@@ -1,0 +1,102 @@
+
+#include <CayenneMQTTESP8266.h>
+#include <MQ135.h>
+#include <MQ7.h>
+#include <MQ2.h>
+
+
+#define ANALOGPIN A0
+#define CAYENNE_DEBUG
+#define CAYENNE_PRINT Serial
+#define VPINCOGAS 5
+#define VPINCO 3
+#define VPINSMK 1
+#define VPINLPG 2
+#define VPINCO2 4
+#define Rzero 701.30
+
+//char ssid[]="Huawei E5573-S";
+//char password[]="password@22764!!";
+char ssid[]="G4";
+char password[]="ghjklmnb";
+char username[]="6c136160-9af3-11e8-bc11-f3efb5d6b0c4";
+char mqpassword[]="8637a6e25604b627e3639c3bd1e3384ec37d3714";
+char clientID[] ="da18aa60-aacc-11e8-9207-895fcb08b269";
+
+MQ135 mq135 = MQ135(ANALOGPIN);
+MQ2 mq2 = MQ2(ANALOGPIN);
+MQ7 mq7 = MQ7(ANALOGPIN,5.0);
+
+
+void setup() {
+  Serial.begin(115200);
+ // Cayenne.begin(username,mqpassword,clientID,ssid,password);
+ Serial.print("Upload Success");
+  mq2.begin();
+  pinMode(LED_BUILTIN,OUTPUT);
+  digitalWrite(LED_BUILTIN,HIGH);
+    pinMode(D0, OUTPUT);
+    pinMode(D1, OUTPUT);
+    pinMode(D2, OUTPUT);  
+    
+}
+
+void mqq7()
+{
+  Serial.print("MQ 7 Value = ");
+  float ppm = mq7.getPPM(); // this to get ppm value, uncomment this to get rzero value
+  Serial.println(ppm); // this to display the ppm value continuously, uncomment this to get rzero value
+    Cayenne.virtualWrite(VPINCO,ppm); // uncomment after rzero define and get your ppm calculation
+}
+void mqq135()
+{
+  Serial.print("MQ 135 Value = ");
+  float ppm = mq135.getPPM(); // this to get ppm value, uncomment this to get rzero value
+  Serial.println(ppm); // this to display the ppm value continuously, uncomment this to get rzero value
+    Cayenne.virtualWrite(VPINCOGAS,ppm); // uncomment after rzero define and get your ppm calculation
+}
+void mqq2()
+{
+  char i[]="*"; 
+    Serial.print("MQ 2 Values");
+    Serial.print("LPG Value=");
+    float lpg = mq2.readLPG();
+    Serial.println(lpg);
+    Serial.print("Smoke Value=");
+    float smoke = mq2.readSmoke();
+    Serial.println(smoke);
+    Serial.print("CO Value=");
+    float co = mq2.readCO();
+    Serial.println(co);
+    Cayenne.virtualWrite(VPINSMK,smoke);
+    Cayenne.virtualWrite(VPINLPG,lpg);
+    Cayenne.virtualWrite(VPINCO2,co);
+}
+void calling()
+{
+    digitalWrite(D0, LOW);
+    digitalWrite(D1, LOW);
+    digitalWrite(D2, LOW);
+    mqq135();
+        delay(2000);
+    digitalWrite(D0, LOW);
+    digitalWrite(D1, LOW);
+    digitalWrite(D2, HIGH);
+    mqq7();
+        delay(2000);
+    digitalWrite(D0, LOW);
+    digitalWrite(D1, HIGH);
+    digitalWrite(D2, LOW);
+    mqq2();    
+    delay(2000);
+}
+void loop() {
+  Cayenne.loop();
+
+}
+
+
+CAYENNE_IN(0)
+{
+    digitalWrite(LED_BUILTIN,!getValue.asInt());
+}
